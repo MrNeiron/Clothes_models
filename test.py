@@ -2,8 +2,8 @@ import numpy as np
 from Preprocess_image import take_n_resize_images
 from keras.models import load_model
 import argparse
-from utils import check_tuple
 
+#                                       PARSING
 parser = argparse.ArgumentParser()
 parser.add_argument("-tpp", "--test_p_path", type = str, default = "../Datasets/datasets/clothes_n_shoes/test")
 parser.add_argument("-tnp", "--test_n_path", type = str, default = "../Datasets/datasets/background/test")
@@ -18,6 +18,7 @@ parser.add_argument("--grayscale", type = bool, default = False)
 
 args = parser.parse_args()
 
+#                                       PARSING TEST DATA
 X_clothes_n_shoes_test = take_n_resize_images(args.test_p_path,
                                                image_size = args.resolution,
                                                grayscale = args.grayscale,
@@ -42,6 +43,8 @@ Y_test = np.vstack((Y_clothes_n_shoes_test,Y_others_test))
 
 print("Y test(shape): ", Y_test.shape)
 
+
+#                                             TEST
 ClothesModel = load_model(args.model_path)
 
 _ , accuracy = ClothesModel.evaluate(X_test,

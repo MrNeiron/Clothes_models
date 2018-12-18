@@ -3,7 +3,6 @@ from Preprocess_image import take_n_resize_images as take
 from keras.models import load_model
 from sklearn.model_selection import train_test_split
 import argparse
-from utils import check_tuple
 
 #                                            PARSING
 parser = argparse.ArgumentParser()
@@ -50,7 +49,7 @@ EPOCHS = args.epochs                        #3
 
 ClothesModel = load_model(args.model_path)
 
-#                                                       TRAIN
+#                                            PARSING DATA
 
 X_clothes_n_shoes = take(args.train_positive_path,
                          image_size = RESOLUTION,
@@ -83,7 +82,7 @@ print("X validation(shape): ", X_val.shape)
 print("Y train(shape): ", Y_train.shape)
 print("Y validation(shape): ", Y_val.shape)
 
-
+#                                             TRAIN
 ClothesModel.fit(X_train, Y_train,
              batch_size = BATCH_SIZE,
              epochs = EPOCHS,
@@ -92,7 +91,7 @@ ClothesModel.fit(X_train, Y_train,
 
 ClothesModel.save(args.save_model_path)
 
-#                                                        TEST    
+#                                            PARSING TEST DATA
 if (args.testOn):
     X_clothes_n_shoes_test = take(args.test_p_path,
                                   image_size = RESOLUTION,
@@ -117,6 +116,8 @@ if (args.testOn):
     Y_test = np.vstack((Y_clothes_n_shoes_test,Y_others_test))
 
     print("Y test(shape): ", Y_test.shape)
+
+#                                                  TEST 
 
     _, accuracy = ClothesModel.evaluate(X_test,
                                   Y_test,
